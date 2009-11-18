@@ -11,6 +11,12 @@
 #include <di/di.h>
 void __exception_closeall();
 
+#if 0
+#include <loaderstub-debug.h>
+#else
+#include <loaderstub.h>
+#endif
+
 #include "filestuff.h"
 #include "bootstuff.h"
 #include "netstuff.h"
@@ -19,20 +25,27 @@ void __exception_closeall();
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 
-static u32 reloadStub[] = {
-	0x3c208133, // lis 1,0x8133
-	0x60210000, // ori 1,1,0x0000
-	0x7c2903a6, // mtctr 1
-	0x4e800420  // bctr
-};
-
 void installStub ()
 {
-	u8 stubSign[] = {'S', 'T', 'U', 'B', 'H', 'A', 'X', 'X'};
-	
+#if 0
+	static const u32 reloadStub[] = {
+		0x3c209300, // lis 1,0x9300
+		0x60210000, // ori 1,1,0x0000
+		0x7c2903a6, // mtctr 1
+		0x4e800420  // bctr
+	};
+#endif
 	memset((void *)0x80001800, 0, 0x1800);
-	//~ memcpy((void *)0x80001804, stubSign, sizeof(stubSign));
+#if 0
 	memcpy((void *)0x80001800, reloadStub, sizeof(reloadStub));
+	memcpy((void *)0x93000000, loaderstub_debug_bin, loaderstub_debug_bin_size);
+	DCFlushRange((void *)0x93000000, loaderstub_debug_bin_size);
+	ICInvalidateRange((void *)0x93000000, loaderstub_debug_bin_size);
+#else
+	memcpy((void *)0x80001800, loaderstub_bin, loaderstub_bin_size);
+#endif
+	DCFlushRange((void *)0x80001800, 0x1800);
+	ICInvalidateRange((void *)0x80001800, 0x1800);
 }
 
 void __initializeVideo()

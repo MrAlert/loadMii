@@ -33,13 +33,13 @@ LDFLAGS	= $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x81330000
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-ldi -liso9660 -lfat -lwiiuse -lbte -logc -lm
+LIBS	:=	-lloaderstub -ldi -liso9660 -lfat -lwiiuse -lbte -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=
+LIBDIRS	:= ../loaderstub
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
